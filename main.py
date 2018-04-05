@@ -1,35 +1,41 @@
-# import the pygame module, so you can use it
-import pygame
+import pygame, sys
+from pygame.locals import *
 
-
-class Cell:
-    def __init__(self):
-        data = 'adasda'
 
 class Grid:
-    def __init__(self):
-        self.gridTab = [ [Cell for x in range(8)] for i in range(8)]
-        self.width = 60
-        self.height = 60
-        self.margin = 10
-        self.color = (255, 255, 255)
-    def drawGrid(self):
-        pygame.init()
-        size = (800, 800)
-        screen = pygame.display.set_mode(size)
-        pygame.display.set_caption("My Game")
-        running = True
-        while running:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    running = False
-            for column in range(0, 8, 1):
-                for row in range(0, 8, 1):
-                    pygame.draw.rect(screen, self.color, [column*60,row*60,self.width,self.height])
-            pygame.display.flip()
+    def __init__(self, x,y ):
+        pass
 
-def main():
-    newGrid = Grid()
-    newGrid.drawGrid()
 
-main()
+
+class Cell(pygame.Rect):
+    def __init__(self, x, y):
+        self.color= (0, 0, 255)
+        self.s=20
+        super(Cell, self).__init__(x, y, self.s, self.s)
+    def draw(self,screen):
+        pygame.draw.rect(screen, color , self)
+
+
+class Agent:
+    pass
+
+
+pygame.init()
+screen = pygame.display.set_mode((400, 300))
+
+
+
+cell= Cell(11,26)
+cell.draw(screen)
+
+
+
+
+
+while True:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+    pygame.display.update()
