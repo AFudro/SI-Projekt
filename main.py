@@ -34,6 +34,24 @@ class Agent(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(self.image, (size, size))
         self.rect = self.image.get_rect()
         self.rect.center = (100, 100)
+        self.directions=["W","N","E","S"]
+        self.size=size
+    def rotateRight(self):
+        self.image = pygame.transform.rotate(self.image, -90)
+        self.directions= self.directions[1:]+ [self.directions[0]]
+    def rotateLeft(self):
+        self.image = pygame.transform.rotate(self.image, 90)
+        self.directions= [self.directions[3]]+self.directions[:3]
+
+    def move(self):
+        if (self.directions[0]=="N"):
+            self.rect.center = (self.rect.center[0] , self.rect.center[1]- self.size)
+        if (self.directions[0]=="S"):
+            self.rect.center = (self.rect.center[0] , self.rect.center[1] + self.size)
+        if (self.directions[0]=="W"):
+            self.rect.center = (self.rect.center[0] - self.size, self.rect.center[1] )
+        if (self.directions[0]=="E"):
+            self.rect.center = (self.rect.center[0] + self.size, self.rect.center[1] )
 
 
 
@@ -56,9 +74,18 @@ while True:
     all_sprites.update()
     all_sprites.draw(screen)
 
-
+    print(agent.directions)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                agent.rotateLeft()
+            if event.key == pygame.K_RIGHT:
+                agent.rotateRight()
+            if event.key == pygame.K_UP:
+                agent.move()
+
+
     pygame.display.update()
