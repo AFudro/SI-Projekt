@@ -30,7 +30,7 @@ class Grid:
 class Agent(pygame.sprite.Sprite):
     def __init__(self, size):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load("agent.jpg")
+        self.image = pygame.image.load("agent.png")
         self.image = pygame.transform.scale(self.image, (size, size))
         self.rect = self.image.get_rect()
         self.rect.center = (100, 100)
