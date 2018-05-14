@@ -76,6 +76,7 @@ while True:
     all_sprites.draw(screen)
 
     print(agent.directions)
+    print(agent.rect.center)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
