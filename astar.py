@@ -41,16 +41,9 @@ def generateNeighbors(current,endx,endy):
 
     return neighbors
 
-def search():
+def search(startx,starty,endx,endy,startdirection):
+    start = Node(startx, starty, startdirection, endx, endy, 'start', 0)
 
-    startx=5
-    starty=2
-    endx=3
-    endy=4
-
-    start = Node(startx, starty, ["E", "S", "W", "N"], endx, endy, 'start', 0)
-
-    print(start.fScore)
     closedSet =[]
     openSet = [start]
     start.gScore=0
@@ -91,4 +84,4 @@ def reconstruct_path(closedSet, current):
     total_path.reverse()
     return total_path
 
-print(search())
+# print(search())

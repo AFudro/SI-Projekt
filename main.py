@@ -1,5 +1,5 @@
 import pygame, sys
-
+import astar
 
 class Cell(pygame.Rect):
     def __init__(self, x, y, s):
@@ -54,6 +54,19 @@ class Agent(pygame.sprite.Sprite):
         if (self.directions[0]=="E"):
             self.rect.center = (self.rect.center[0] + self.size, self.rect.center[1] )
 
+    def findWay(self,endx,endy):
+
+        print(self.rect.x/self.size,self.rect.y/self.size)
+        print(astar.search(self.rect.x/self.size,self.rect.y/self.size,endx,endy,self.directions))
+
+
+
+    # def doActions(self,array):
+    #     for x in array:
+    #         if (x=='rotateRight'): self.rotateRight
+    #         if (x == 'rotateLeft'): self.rotateLeft
+    #         if (x == 'move'): self.move
+
 
 
 
@@ -75,8 +88,8 @@ while True:
     all_sprites.update()
     all_sprites.draw(screen)
 
-    print(agent.directions)
-    print(agent.rect.center)
+    # print(agent.directions)
+    # print(agent.rect.center)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -88,6 +101,8 @@ while True:
                 agent.rotateRight()
             if event.key == pygame.K_UP:
                 agent.move()
+            if event.key == pygame.K_DOWN:
+                agent.findWay(5,5)
 
 
     pygame.display.update()
