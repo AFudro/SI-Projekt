@@ -1,5 +1,6 @@
 import pygame, sys
 
+
 class Cell(pygame.Rect):
     def __init__(self, x, y, s):
         self.color= (0, 0, 0)
