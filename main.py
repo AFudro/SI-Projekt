@@ -37,6 +37,7 @@ class Agent(pygame.sprite.Sprite):
         self.rect.center = (100, 100)
         self.directions=["W","N","E","S"]
         self.size=size
+        self.path=[]
     def rotateRight(self):
         self.image = pygame.transform.rotate(self.image, -90)
         self.directions= self.directions[1:]+ [self.directions[0]]
@@ -54,21 +55,17 @@ class Agent(pygame.sprite.Sprite):
         if (self.directions[0]=="E"):
             self.rect.center = (self.rect.center[0] + self.size, self.rect.center[1] )
 
-    def findWay(self,endx,endy):
-
-        print(self.rect.x/self.size,self.rect.y/self.size)
+    def goTo(self,endx,endy):
+        print(endx,endy)
         print(astar.search(self.rect.x/self.size,self.rect.y/self.size,endx,endy,self.directions))
+        self.path= astar.search(self.rect.x / self.size, self.rect.y / self.size, endx, endy, self.directions)
 
-
-
-    # def doActions(self,array):
-    #     for x in array:
-    #         if (x=='rotateRight'): self.rotateRight
-    #         if (x == 'rotateLeft'): self.rotateLeft
-    #         if (x == 'move'): self.move
-
-
-
+    def update(self):
+        if self.path:
+            action=self.path.pop(0)
+            if (action=='rotateRight'): self.rotateRight()
+            if (action == 'rotateLeft'): self.rotateLeft()
+            if (action == 'move'): self.move()
 
 pygame.init()
 screen = pygame.display.set_mode((450, 450))
@@ -80,7 +77,7 @@ all_sprites = pygame.sprite.Group()
 agent = Agent(grid.getCellSize())
 all_sprites.add(agent)
 
-
+clock = pygame.time.Clock()
 while True:
     screen.fill((255, 255, 255))
     grid.draw(screen)
@@ -88,21 +85,16 @@ while True:
     all_sprites.update()
     all_sprites.draw(screen)
 
-    # print(agent.directions)
-    # print(agent.rect.center)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_LEFT:
-                agent.rotateLeft()
-            if event.key == pygame.K_RIGHT:
-                agent.rotateRight()
-            if event.key == pygame.K_UP:
-                agent.move()
-            if event.key == pygame.K_DOWN:
-                agent.findWay(5,5)
-
-
+        if event.type == pygame.MOUSEBUTTONUP:
+            pos = pygame.mouse.get_pos()
+            for x in range(grid.size):
+                for y in range(grid.size):
+                    if(grid.cells[x][y].collidepoint(pos)):
+                        agent.goTo(x, y)
+                        break
     pygame.display.update()
+    clock.tick(20)
