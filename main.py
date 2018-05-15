@@ -1,13 +1,17 @@
 import pygame, sys
 import astar
 
+def walls(i,j):
+    return (j+i)%6==2 and j!=3 and j!=1 and j!=8
+
 class Cell(pygame.Rect):
-    def __init__(self, x, y, s):
+    def __init__(self, x, y, s, wall):
         self.color= (0, 0, 0)
         self.s=s
+        self.wall=wall
         super(Cell, self).__init__(x, y, self.s, self.s)
-    def draw(self,screen):
-        pygame.draw.rect(screen, self.color , self,1)
+    def draw(self,screen,color,fill):
+        pygame.draw.rect(screen, color, self,fill)
 
 class Grid:
     def __init__(self,size,cellSize):
@@ -17,12 +21,18 @@ class Grid:
 
         for i in range(self.size):
             for j in range(self.size):
-                self.cells[i][j]= Cell(i*self.cellSize,j*self.cellSize,self.cellSize)
+                if(walls(i,j)):
+                    self.cells[i][j]= Cell(i*self.cellSize,j*self.cellSize,self.cellSize,1)
+                else:
+                    self.cells[i][j]= Cell(i*self.cellSize,j*self.cellSize,self.cellSize,0)
 
     def draw(self,screen):
         for i in range(self.size):
             for j in range(self.size):
-                self.cells[i][j].draw(screen)
+                if(self.cells[i][j].wall==1):
+                    self.cells[i][j].draw(screen,(255,0,0),0)
+                else:
+                    self.cells[i][j].draw(screen,(0,0,0),1)
 
     def getCellSize(self):
         return self.cellSize
@@ -56,10 +66,10 @@ class Agent(pygame.sprite.Sprite):
             self.rect.center = (self.rect.center[0] + self.size, self.rect.center[1] )
 
     def goTo(self,endx,endy):
-        print(endx,endy)
-        print(astar.search(self.rect.x/self.size,self.rect.y/self.size,endx,endy,self.directions))
-        self.path= astar.search(self.rect.x / self.size, self.rect.y / self.size, endx, endy, self.directions)
-
+        #print(endx,endy)
+        #print(astar.search(self.rect.x/self.size,self.rect.y/self.size,endx,endy,self.directions,grid.cells))
+        self.path= astar.search(self.rect.x / self.size, self.rect.y / self.size, endx, endy, self.directions,grid.cells)
+        print(self.path)
     def update(self):
         if self.path:
             action=self.path.pop(0)

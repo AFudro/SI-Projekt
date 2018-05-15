@@ -22,17 +22,25 @@ class Node:
     def update(self):
         self.fScore=self.gScore+self.hScore
 
-def generateNeighbors(current,endx,endy):
+def generateNeighbors(current,endx,endy,grid):
     neighbors=[]
-
+    #print(current.x, current.y-1)
     if (current.direction[0] == "N"):
-        neighbors.append(Node(current.x, current.y-1, current.direction, endx, endy,"move",current.gScore + 1))  # move
+        if((current.y-1)>=0):
+            if(grid[int(current.x)][int(current.y-1)].wall==0):
+                neighbors.append(Node(current.x, current.y-1, current.direction, endx, endy,"move",current.gScore + 1))  # move
     if (current.direction[0] == "S"):
-        neighbors.append(Node(current.x, current.y+1, current.direction, endx, endy,"move",current.gScore + 1))  # move
+        if((current.y+1)<len(grid)):
+            if(grid[int(current.x)][int(current.y+1)].wall==0):
+                neighbors.append(Node(current.x, current.y+1, current.direction, endx, endy,"move",current.gScore + 1))  # move
     if (current.direction[0] == "W"):
-        neighbors.append(Node(current.x-1, current.y, current.direction, endx, endy,"move",current.gScore + 1))  # move
+        if((current.x-1)>=0):
+            if(grid[int(current.x-1)][int(current.y)].wall==0):
+                neighbors.append(Node(current.x-1, current.y, current.direction, endx, endy,"move",current.gScore + 1))  # move
     if (current.direction[0] == "E"):
-        neighbors.append(Node(current.x+1, current.y, current.direction, endx, endy,"move",current.gScore + 1))  # move
+        if((current.x+1)<len(grid)):
+            if(grid[int(current.x+1)][int(current.y)].wall==0):
+                neighbors.append(Node(current.x+1, current.y, current.direction, endx, endy,"move",current.gScore + 1))  # move
 
     neighbors.append(
         Node(current.x, current.y, [current.direction[3]] + current.direction[:3], endx, endy,"rotateLeft",current.gScore + 1))  # rotate left
@@ -41,7 +49,7 @@ def generateNeighbors(current,endx,endy):
 
     return neighbors
 
-def search(startx,starty,endx,endy,startdirection):
+def search(startx,starty,endx,endy,startdirection,grid):
     start = Node(startx, starty, startdirection, endx, endy, 'start', 0)
 
     closedSet =[]
@@ -58,7 +66,7 @@ def search(startx,starty,endx,endy,startdirection):
         openSet.remove(current)
         closedSet.append(current)
 
-        neighbors=generateNeighbors(current,endx,endy)
+        neighbors=generateNeighbors(current,endx,endy,grid)
         for neighbor in neighbors:
             if neighbor in closedSet:
                 continue		#Ignore the neighbor which is already evaluated.
