@@ -1,5 +1,6 @@
 from math import *
 import operator
+from queue import *
 
 index=0
 
@@ -10,7 +11,7 @@ class Node:
         index=index+1
 
         self.gScore=gScore
-        self.hScore=sqrt(((x-endx)**2)+((y-endy)**2))
+        self.hScore=sqrt(((endx-x)**2)+((endy-y)**2))
         self.fScore=self.gScore+self.hScore
         self.visitedBy=0
         self.x=x
@@ -53,28 +54,27 @@ def search(startx,starty,endx,endy,startdirection,grid):
     start = Node(startx, starty, startdirection, endx, endy, 'start', 0)
 
     closedSet =[]
-    openSet = [start]
+    openSet = PriorityQueue()
+    openSet.put((start.fScore,start.id,start))
     start.gScore=0
 
-    while openSet:
-        openSet.sort(key=operator.attrgetter('fScore'))
-        current = openSet[0]
+    while not openSet.empty():
+        print(len(openSet.queue))
 
+        current = openSet.get()[2]
         if current.hScore==0:
             return reconstruct_path(closedSet, current)
-
-        openSet.remove(current)
         closedSet.append(current)
 
-        neighbors=generateNeighbors(current,endx,endy,grid)
-        for neighbor in neighbors:
+        for neighbor in generateNeighbors(current,endx,endy,grid):
             if neighbor in closedSet:
-                continue		#Ignore the neighbor which is already evaluated.
-
-            if neighbor not in openSet:
-                openSet.append(neighbor)
-
+                continue
+            if (neighbor.fScore,neighbor.id,neighbor) not in openSet.queue and neighbor not in closedSet:
+                openSet.put((neighbor.fScore,neighbor.id,neighbor))
             tentative_gScore = current.gScore + 1
+            if tentative_gScore > neighbor.gScore:
+                continue
+
             neighbor.visitedBy=current.id
             neighbor.gScore=tentative_gScore
             neighbor.update()
