@@ -1,8 +1,17 @@
 import pygame, sys
 import astar
 
-def walls(i,j):
-    return (j+i)%6==2 and j!=3 and j!=1 and j!=8
+
+def loadMap():
+    array=[]
+    with open('map.txt') as f:
+        content = f.read().splitlines()
+        for line in content:
+            array.append(line)
+    print(array)
+    return array
+
+
 
 class Cell(pygame.Rect):
     def __init__(self, x, y, s, wall):
@@ -14,23 +23,27 @@ class Cell(pygame.Rect):
         pygame.draw.rect(screen, color, self,fill)
 
 class Grid:
-    def __init__(self,size,cellSize):
-        self.size=size
+    def __init__(self, map, cellSize):
         self.cellSize=cellSize
-        self.cells=[[0 for x in range(self.size)] for y in range(self.size)]
-
-        for i in range(self.size):
-            for j in range(self.size):
-                if(walls(i,j)):
-                    self.cells[i][j]= Cell(i*self.cellSize,j*self.cellSize,self.cellSize,1)
+        self.ysize=len(map)
+        self.xsize=len(map[0])
+        self.cells=[[0 for x in range(self.xsize)] for y in range(self.ysize)]
+        for i in range(self.ysize):
+            for j in range(self.xsize):
+                if(map[i][j]=='1'):
+                    self.cells[i][j]= Cell(j*self.cellSize,i*self.cellSize,self.cellSize,1)
+                elif (map[i][j]=='2'):
+                    self.cells[i][j]= Cell(j*self.cellSize,i*self.cellSize,self.cellSize,2)
                 else:
-                    self.cells[i][j]= Cell(i*self.cellSize,j*self.cellSize,self.cellSize,0)
+                    self.cells[i][j]= Cell(j*self.cellSize,i*self.cellSize,self.cellSize,0)
 
     def draw(self,screen):
-        for i in range(self.size):
-            for j in range(self.size):
+        for i in range(self.ysize):
+            for j in range(self.xsize):
                 if(self.cells[i][j].wall==1):
                     self.cells[i][j].draw(screen,(255,0,0),0)
+                if(self.cells[i][j].wall==2):
+                    self.cells[i][j].draw(screen,(120,100,0),0)
                 else:
                     self.cells[i][j].draw(screen,(0,0,0),1)
 
@@ -54,7 +67,6 @@ class Agent(pygame.sprite.Sprite):
     def rotateLeft(self):
         self.image = pygame.transform.rotate(self.image, 90)
         self.directions= [self.directions[3]]+self.directions[:3]
-
     def move(self):
         if (self.directions[0]=="N"):
             self.rect.center = (self.rect.center[0] , self.rect.center[1]- self.size)
@@ -64,11 +76,11 @@ class Agent(pygame.sprite.Sprite):
             self.rect.center = (self.rect.center[0] - self.size, self.rect.center[1] )
         if (self.directions[0]=="E"):
             self.rect.center = (self.rect.center[0] + self.size, self.rect.center[1] )
-
-    def goTo(self,endx,endy):
-        #print(endx,endy)
-        #print(astar.search(self.rect.x/self.size,self.rect.y/self.size,endx,endy,self.directions,grid.cells))
-        self.path= astar.search(self.rect.x / self.size, self.rect.y / self.size, endx, endy, self.directions,grid.cells)
+    def goTo(self,endy,endx):
+        agentPositionx=self.rect.x / self.size
+        agentPositiony = self.rect.y / self.size
+        print(agentPositionx,agentPositiony)
+        self.path = astar.search(agentPositionx, agentPositiony, endx, endy, self.directions, map)
         print(self.path)
     def update(self):
         if self.path:
@@ -80,8 +92,10 @@ class Agent(pygame.sprite.Sprite):
 pygame.init()
 screen = pygame.display.set_mode((450, 450))
 
-grid= Grid(10,40)
 
+map= loadMap()
+
+grid=Grid(map,40)
 
 all_sprites = pygame.sprite.Group()
 agent = Agent(grid.getCellSize())
@@ -101,10 +115,11 @@ while True:
             sys.exit()
         if event.type == pygame.MOUSEBUTTONUP:
             pos = pygame.mouse.get_pos()
-            for x in range(grid.size):
-                for y in range(grid.size):
-                    if(grid.cells[x][y].collidepoint(pos)):
-                        agent.goTo(x, y)
+            for i in range(grid.ysize):
+                for j in range(grid.xsize):
+                    if(grid.cells[i][j].collidepoint(pos)):
+                        print(i,j)
+                        agent.goTo(i, j)
                         break
     pygame.display.update()
     clock.tick(20)

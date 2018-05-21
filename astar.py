@@ -23,24 +23,24 @@ class Node:
     def update(self):
         self.fScore=self.gScore+self.hScore
 
-def generateNeighbors(current,endx,endy,grid):
+def generateNeighbors(current,endx,endy,map):
     neighbors=[]
     #print(current.x, current.y-1)
     if (current.direction[0] == "N"):
-        if((current.y-1)>=0):
-            if(grid[int(current.x)][int(current.y-1)].wall==0):
+         if((current.y-1)>=0):
+             if(map[int(current.y-1)][int(current.x)]=='0'):
                 neighbors.append(Node(current.x, current.y-1, current.direction, endx, endy,"move",current.gScore + 1))  # move
     if (current.direction[0] == "S"):
-        if((current.y+1)<len(grid)):
-            if(grid[int(current.x)][int(current.y+1)].wall==0):
+         if((current.y+1)<len(map)):
+             if(map[int(current.y+1)][int(current.x)]=='0'):
                 neighbors.append(Node(current.x, current.y+1, current.direction, endx, endy,"move",current.gScore + 1))  # move
     if (current.direction[0] == "W"):
-        if((current.x-1)>=0):
-            if(grid[int(current.x-1)][int(current.y)].wall==0):
+         if((current.x-1)>=0):
+             if(map[int(current.y)][int(current.x-1)]=='0'):
                 neighbors.append(Node(current.x-1, current.y, current.direction, endx, endy,"move",current.gScore + 1))  # move
     if (current.direction[0] == "E"):
-        if((current.x+1)<len(grid)):
-            if(grid[int(current.x+1)][int(current.y)].wall==0):
+         if((current.x+1)<len(map[0])):
+            if(map[int(current.y)][int(current.x+1)]=='0'):
                 neighbors.append(Node(current.x+1, current.y, current.direction, endx, endy,"move",current.gScore + 1))  # move
 
     neighbors.append(
@@ -50,7 +50,7 @@ def generateNeighbors(current,endx,endy,grid):
 
     return neighbors
 
-def search(startx,starty,endx,endy,startdirection,grid):
+def search(startx,starty,endx,endy,startdirection,map):
     start = Node(startx, starty, startdirection, endx, endy, 'start', 0)
 
     closedSet =[]
@@ -66,7 +66,7 @@ def search(startx,starty,endx,endy,startdirection,grid):
             return reconstruct_path(closedSet, current)
         closedSet.append(current)
 
-        for neighbor in generateNeighbors(current,endx,endy,grid):
+        for neighbor in generateNeighbors(current,endx,endy,map):
             if neighbor in closedSet:
                 continue
             if (neighbor.fScore,neighbor.id,neighbor) not in openSet.queue and neighbor not in closedSet:
