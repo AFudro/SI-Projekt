@@ -6,10 +6,6 @@ index=0
 
 class Node:
     def __init__(self,x,y,direction,endx,endy,action,gScore):
-        global index
-        self.id=index
-        index=index+1
-
         self.gScore=gScore
         self.hScore=sqrt(((endx-x)**2)+((endy-y)**2))
         self.fScore=self.gScore+self.hScore
@@ -19,6 +15,8 @@ class Node:
         self.direction=direction
         self.action=action
 
+    def __lt__(self, other):
+        return self.fScore <other.fScore
 
     def update(self):
         self.fScore=self.gScore+self.hScore
@@ -53,42 +51,37 @@ def generateNeighbors(current,endx,endy,map):
 def search(startx,starty,endx,endy,startdirection,map):
     start = Node(startx, starty, startdirection, endx, endy, 'start', 0)
 
-    closedSet =[]
+    closedSet = set()
     openSet = PriorityQueue()
-    openSet.put((start.fScore,start.id,start))
+    openSet.put((start.fScore,start.x,start.y,start.direction[0],start))
     start.gScore=0
+    cameFrom = {}
 
     while not openSet.empty():
-        print(len(openSet.queue))
-
-        current = openSet.get()[2]
+        current = openSet.get()[4]
         if current.hScore==0:
-            return reconstruct_path(closedSet, current)
-        closedSet.append(current)
+            return reconstruct_path(cameFrom, current)
+        closedSet.add(str(current.x)+','+str(current.y)+','+current.direction[0]+',')
 
         for neighbor in generateNeighbors(current,endx,endy,map):
-            if neighbor in closedSet:
+            if str(neighbor.x)+','+str(neighbor.y)+','+neighbor.direction[0]+',' in closedSet:
                 continue
-            if (neighbor.fScore,neighbor.id,neighbor) not in openSet.queue and neighbor not in closedSet:
-                openSet.put((neighbor.fScore,neighbor.id,neighbor))
+            if (neighbor.fScore,neighbor.x,neighbor.y,neighbor.direction[0],neighbor) not in openSet.queue:
+                openSet.put((neighbor.fScore,neighbor.x,neighbor.y,neighbor.direction[0],neighbor))
             tentative_gScore = current.gScore + 1
             if tentative_gScore > neighbor.gScore:
                 continue
-
-            neighbor.visitedBy=current.id
+            cameFrom[neighbor]=current
             neighbor.gScore=tentative_gScore
             neighbor.update()
 
     return 0
 
-def reconstruct_path(closedSet, current):
+def reconstruct_path(cameFrom, current):
     total_path = [current.action]
-
     while current.action!="start":
-        for x in closedSet:
-            if x.id == current.visitedBy:
-                current=x
-                total_path.append(current.action)
+        current=cameFrom[current]
+        total_path.append(current.action)
     total_path.reverse()
     return total_path
 

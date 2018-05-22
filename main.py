@@ -90,7 +90,7 @@ class Agent(pygame.sprite.Sprite):
             if (action == 'move'): self.move()
 
 pygame.init()
-screen = pygame.display.set_mode((450, 450))
+screen = pygame.display.set_mode((800, 800))
 
 
 map= loadMap()
