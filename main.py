@@ -44,7 +44,7 @@ class Grid:
             for j in range(self.xsize):
                 if(self.cells[i][j].wall == 0):
                     self.cells[i][j].draw(screen, (255, 0, 0), 0)
-                    if( ((i*j)+j+i) % 6 ==0):
+                    if( ((i*j)+j+i) % 2 ==0):
                         self.cells[i][j].image = pygame.transform.scale(pygame.image.load("tree.jpg"), (40, 40))
                     else:
                         self.cells[i][j].image = pygame.transform.scale(pygame.image.load("house.jpg"), (40, 40))
