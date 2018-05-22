@@ -40,12 +40,13 @@ class Grid:
     def draw(self,screen):
         for i in range(self.ysize):
             for j in range(self.xsize):
-                if(self.cells[i][j].wall==1):
+                if(self.cells[i][j].wall==0):
                     self.cells[i][j].draw(screen,(255,0,0),0)
+                if(self.cells[i][j].wall==1):
+                    self.cells[i][j].draw(screen,(255,255,255),0)
+
                 if(self.cells[i][j].wall==2):
                     self.cells[i][j].draw(screen,(120,100,0),0)
-                else:
-                    self.cells[i][j].draw(screen,(0,0,0),1)
 
     def getCellSize(self):
         return self.cellSize
@@ -77,11 +78,14 @@ class Agent(pygame.sprite.Sprite):
         if (self.directions[0]=="E"):
             self.rect.center = (self.rect.center[0] + self.size, self.rect.center[1] )
     def goTo(self,endy,endx):
-        agentPositionx=self.rect.x / self.size
-        agentPositiony = self.rect.y / self.size
-        print(agentPositionx,agentPositiony)
-        self.path = astar.search(agentPositionx, agentPositiony, endx, endy, self.directions, map)
-        print(self.path)
+        if(int(map[int(self.rect.y / self.size)][int(self.rect.x / self.size)]) > 0):
+            print('asdasdadsada')
+            agentPositionx=self.rect.x / self.size
+            agentPositiony = self.rect.y / self.size
+            print(agentPositionx,agentPositiony)
+            self.path = astar.search(agentPositionx, agentPositiony, endx, endy, self.directions, map)
+            print(self.path)
+        else: self.path = []
     def update(self):
         if self.path:
             action=self.path.pop(0)
@@ -90,7 +94,7 @@ class Agent(pygame.sprite.Sprite):
             if (action == 'move'): self.move()
 
 pygame.init()
-screen = pygame.display.set_mode((800, 800))
+screen = pygame.display.set_mode((1200, 800))
 
 
 map= loadMap()
@@ -103,7 +107,7 @@ all_sprites.add(agent)
 
 clock = pygame.time.Clock()
 while True:
-    screen.fill((255, 255, 255))
+    screen.fill((0, 0, 0))
     grid.draw(screen)
 
     all_sprites.update()

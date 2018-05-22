@@ -26,19 +26,19 @@ def generateNeighbors(current,endx,endy,map):
     #print(current.x, current.y-1)
     if (current.direction[0] == "N"):
          if((current.y-1)>=0):
-             if(map[int(current.y-1)][int(current.x)]=='0'):
+             if(map[int(current.y-1)][int(current.x)]!='0'):
                 neighbors.append(Node(current.x, current.y-1, current.direction, endx, endy,"move",current.gScore + 1))  # move
     if (current.direction[0] == "S"):
          if((current.y+1)<len(map)):
-             if(map[int(current.y+1)][int(current.x)]=='0'):
+             if(map[int(current.y+1)][int(current.x)]!='0'):
                 neighbors.append(Node(current.x, current.y+1, current.direction, endx, endy,"move",current.gScore + 1))  # move
     if (current.direction[0] == "W"):
          if((current.x-1)>=0):
-             if(map[int(current.y)][int(current.x-1)]=='0'):
+             if(map[int(current.y)][int(current.x-1)]!='0'):
                 neighbors.append(Node(current.x-1, current.y, current.direction, endx, endy,"move",current.gScore + 1))  # move
     if (current.direction[0] == "E"):
          if((current.x+1)<len(map[0])):
-            if(map[int(current.y)][int(current.x+1)]=='0'):
+            if(map[int(current.y)][int(current.x+1)]!='0'):
                 neighbors.append(Node(current.x+1, current.y, current.direction, endx, endy,"move",current.gScore + 1))  # move
 
     neighbors.append(
