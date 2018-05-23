@@ -1,11 +1,11 @@
 import pygame
 import sys
 import astar
+import tsp
 
-
-def loadMap():
+def loadMap(filepath):
     array = []
-    with open('map.txt') as f:
+    with open(filepath) as f:
         content = f.read().splitlines()
         for line in content:
             array.append(line)
@@ -68,6 +68,16 @@ class Grid:
         return self.cellSize
 
 
+class TrashCan(pygame.sprite.Sprite):
+    def __init__(self,size,x,y):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load("sprites/trashcan.png")
+        self.image = pygame.transform.scale(self.image, (size, size))
+        self.rect = self.image.get_rect()
+        self.rect.center = (x, y)
+        self.size = size
+
+
 class Agent(pygame.sprite.Sprite):
     def __init__(self, size):
         pygame.sprite.Sprite.__init__(self)
@@ -127,13 +137,21 @@ pygame.init()
 screen = pygame.display.set_mode((1200, 900))
 
 
-map = loadMap()
+cellSize=40
 
-grid = Grid(map, 40)
+map = loadMap('map.txt')
+objectmap=loadMap('objectmap.txt')
+grid = Grid(map, cellSize)
 
 all_sprites = pygame.sprite.Group()
 agent = Agent(grid.getCellSize())
 all_sprites.add(agent)
+
+
+for i in range(len(objectmap)):
+    for j in range(len(objectmap[0])):
+        if (objectmap[i][j]=='1'):
+            all_sprites.add(TrashCan(cellSize,(j*cellSize)+20,i*cellSize+20))
 
 clock = pygame.time.Clock()
 while True:
@@ -154,6 +172,7 @@ while True:
                     if(grid.cells[i][j].collidepoint(pos)):
                         print(i, j)
                         agent.goTo(i, j)
+                        tsp.find(agent,map,objectmap)
                         break
     pygame.display.update()
     clock.tick(20)
