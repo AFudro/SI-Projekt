@@ -3,7 +3,20 @@ import sys
 import astar
 import tsp
 
+<<<<<<< HEAD
 def loadMap(filepath):
+=======
+grass = pygame.image.load("sprites/grass.jpg")
+tree = pygame.image.load("sprites/tree.jpg")
+house = pygame.image.load("sprites/house.jpg")
+road = pygame.image.load("sprites/road.jpg")
+road2 = pygame.image.load("sprites/road2.jpg")
+road3 = pygame.image.load("sprites/road3.jpg")
+oil = pygame.image.load("sprites/oil.jpg")
+puddle = pygame.image.load("sprites/puddle.jpg")
+
+def loadMap():
+>>>>>>> 5be185fbc3ba3f32b4e03cd01f7bdcc1d65687f2
     array = []
     with open(filepath) as f:
         content = f.read().splitlines()
@@ -18,7 +31,7 @@ class Cell(pygame.Rect):
         self.color = (0, 0, 0)
         self.s = s
         self.wall = wall
-        self.image = pygame.image.load("sprites/agent.png")
+        self.image = grass
         self.image = pygame.transform.scale(self.image, (40, 40))
         super(Cell, self).__init__(x, y, self.s, self.s)
 
@@ -45,23 +58,23 @@ class Grid:
                 if(self.cells[i][j].wall == 0):
                     self.cells[i][j].draw(screen, (255, 0, 0), 0)
                     if( ((i*j)+j+i) % 2 ==0):
-                        self.cells[i][j].image = pygame.transform.scale(pygame.image.load("sprites/tree.jpg"), (40, 40))
+                        self.cells[i][j].image = pygame.transform.scale(tree, (40, 40))
                     else:
-                        self.cells[i][j].image = pygame.transform.scale(pygame.image.load("sprites/house.jpg"), (40, 40))
+                        self.cells[i][j].image = pygame.transform.scale(house, (40, 40))
                 if(self.cells[i][j].wall == 1):
-                    self.cells[i][j].image = pygame.transform.scale(pygame.image.load("sprites/road.jpg"), (40, 40))
+                    self.cells[i][j].image = pygame.transform.scale(road, (40, 40))
                     self.cells[i][j].draw(screen, (112, 112, 112), 0)
                 if(self.cells[i][j].wall == 2):
-                    self.cells[i][j].image = pygame.transform.scale(pygame.image.load("sprites/road2.jpg"), (40, 40))
+                    self.cells[i][j].image = pygame.transform.scale(road2, (40, 40))
                     self.cells[i][j].draw(screen, (95, 71, 71), 0)
                 if(self.cells[i][j].wall == 3):
-                    self.cells[i][j].image = pygame.transform.scale(pygame.image.load("sprites/road3.jpg"), (40, 40))
+                    self.cells[i][j].image = pygame.transform.scale(road3, (40, 40))
                     self.cells[i][j].draw(screen, (95, 71, 71), 0)
                 if(self.cells[i][j].wall == 9):
-                    self.cells[i][j].image = pygame.transform.scale(pygame.image.load("sprites/oil.jpg"), (40, 40))
+                    self.cells[i][j].image = pygame.transform.scale(oil, (40, 40))
                     self.cells[i][j].draw(screen, (0, 0, 255), 0)
                 if(self.cells[i][j].wall == 8):
-                    self.cells[i][j].image = pygame.transform.scale(pygame.image.load("sprites/puddle.jpg"), (40, 40))
+                    self.cells[i][j].image = pygame.transform.scale(puddle, (40, 40))
                     self.cells[i][j].draw(screen, (0, 255, 0), 0)
 
     def getCellSize(self):
@@ -175,4 +188,4 @@ while True:
                         tsp.find(agent,map,objectmap)
                         break
     pygame.display.update()
-    clock.tick(20)
+    clock.tick(15)
