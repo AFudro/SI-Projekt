@@ -3,7 +3,7 @@ import sys
 import astar
 import tsp
 
-def loadMap(filepath):
+
 grass = pygame.image.load("sprites/grass.jpg")
 tree = pygame.image.load("sprites/tree.jpg")
 house = pygame.image.load("sprites/house.jpg")
@@ -13,7 +13,7 @@ road3 = pygame.image.load("sprites/road3.jpg")
 oil = pygame.image.load("sprites/oil.jpg")
 puddle = pygame.image.load("sprites/puddle.jpg")
 
-def loadMap():
+def loadMap(filepath):
     array = []
     with open(filepath) as f:
         content = f.read().splitlines()
