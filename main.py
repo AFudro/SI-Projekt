@@ -19,7 +19,7 @@ def loadMap(filepath):
         content = f.read().splitlines()
         for line in content:
             array.append(line)
-    print(array)
+    # print(array)
     return array
 
 
@@ -97,7 +97,8 @@ class Agent(pygame.sprite.Sprite):
         self.rect.center = (100, 100)
         self.directions = ["W", "N", "E", "S"]
         self.size = size
-        self.path = []
+        self.actions = []
+        self.path=[]
 
     def rotateRight(self):
         self.image = pygame.transform.rotate(self.image, -90)
@@ -121,26 +122,39 @@ class Agent(pygame.sprite.Sprite):
             self.rect.center = (
                 self.rect.center[0] + self.size, self.rect.center[1])
 
+
+    def getPosition(self):
+        return [self.rect.y / self.size,self.rect.x / self.size]
+
     def goTo(self, endy, endx):
-        if(int(map[int(self.rect.y / self.size)][int(self.rect.x / self.size)]) > 0):
+        print(endy,endx)
+        if(int(map[int(endy)][int(endx)])>0):
             agentPositionx = self.rect.x / self.size
             agentPositiony = self.rect.y / self.size
-            print(agentPositionx, agentPositiony)
-            self.path = astar.search(
+            self.actions, distance = astar.search(
                 agentPositionx, agentPositiony, endx, endy, self.directions, map)
-            print(self.path)
+            print(distance, self.actions)
         else:
-            self.path = []
+            self.actions = []
 
     def update(self):
-        if self.path:
-            action = self.path.pop(0)
+        if self.actions:
+            action = self.actions.pop(0)
             if (action == 'rotateRight'):
                 self.rotateRight()
             if (action == 'rotateLeft'):
                 self.rotateLeft()
             if (action == 'move'):
                 self.move()
+        else:
+            if(self.path):
+                nextpoint= self.path.pop(0)
+                self.goTo(nextpoint[1],nextpoint[0])
+
+    def calculatePath(self):
+        print(tsp.find(agent.getPosition(), map, objectmap))
+        self.path= tsp.find(agent.getPosition(), map, objectmap)
+
 
 
 pygame.init()
@@ -180,9 +194,11 @@ while True:
             for i in range(grid.ysize):
                 for j in range(grid.xsize):
                     if(grid.cells[i][j].collidepoint(pos)):
-                        print(i, j)
                         agent.goTo(i, j)
-                        tsp.find(agent,map,objectmap)
+                        break
+        if event.type == pygame.KEYDOWN:
+            if event.key==pygame.K_SPACE:
+                        agent.calculatePath()
                         break
     pygame.display.update()
     clock.tick(15)

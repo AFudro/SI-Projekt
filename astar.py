@@ -84,14 +84,13 @@ def search(startx, starty, endx, endy, startdirection, map):
             neighbor.gScore=tentative_gScore
             neighbor.update()
 
-    return 0
+    return 0,0
 
 def reconstruct_path(cameFrom, current):
     total_path=[current.action]
+    distance= current.gScore
     while current.action != "start":
         current=cameFrom[current]
         total_path.append(current.action)
     total_path.reverse()
-    return total_path
-
-# print(search())
+    return total_path, distance
