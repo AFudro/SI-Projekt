@@ -47,9 +47,9 @@ def generateNeighbors(current, endx, endy, map):
                                  current.gScore + current.gScore + int(map[int(current.y)][int(current.x + 1)])))  # move
 
     neighbors.append(
-        Node(current.x, current.y, [current.direction[3]] + current.direction[:3], endx, endy, "rotateLeft", current.gScore + 1))  # rotate left
+        Node(current.x, current.y, [current.direction[3]] + current.direction[:3], endx, endy, "rotateLeft", current.gScore + int(map[int(current.y)][int(current.x)])))  # rotate left
     neighbors.append(
-        Node(current.x, current.y, current.direction[1:] + [current.direction[0]], endx, endy, "rotateRight", current.gScore + 1))  # rotate right
+        Node(current.x, current.y, current.direction[1:] + [current.direction[0]], endx, endy, "rotateRight", current.gScore + int(map[int(current.y)][int(current.x)])))  # rotate right
 
     return neighbors
 

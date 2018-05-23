@@ -157,4 +157,4 @@ while True:
                         agent.goTo(i, j)
                         break
     pygame.display.update()
-    clock.tick(50)
+    clock.tick(20)
