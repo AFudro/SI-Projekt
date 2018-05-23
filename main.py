@@ -18,7 +18,7 @@ class Cell(pygame.Rect):
         self.color = (0, 0, 0)
         self.s = s
         self.wall = wall
-        self.image = pygame.image.load("agent.png")
+        self.image = pygame.image.load("sprites/agent.png")
         self.image = pygame.transform.scale(self.image, (40, 40))
         super(Cell, self).__init__(x, y, self.s, self.s)
 
@@ -45,23 +45,23 @@ class Grid:
                 if(self.cells[i][j].wall == 0):
                     self.cells[i][j].draw(screen, (255, 0, 0), 0)
                     if( ((i*j)+j+i) % 2 ==0):
-                        self.cells[i][j].image = pygame.transform.scale(pygame.image.load("tree.jpg"), (40, 40))
+                        self.cells[i][j].image = pygame.transform.scale(pygame.image.load("sprites/tree.jpg"), (40, 40))
                     else:
-                        self.cells[i][j].image = pygame.transform.scale(pygame.image.load("house.jpg"), (40, 40))
+                        self.cells[i][j].image = pygame.transform.scale(pygame.image.load("sprites/house.jpg"), (40, 40))
                 if(self.cells[i][j].wall == 1):
-                    self.cells[i][j].image = pygame.transform.scale(pygame.image.load("road.jpg"), (40, 40))
+                    self.cells[i][j].image = pygame.transform.scale(pygame.image.load("sprites/road.jpg"), (40, 40))
                     self.cells[i][j].draw(screen, (112, 112, 112), 0)
                 if(self.cells[i][j].wall == 2):
-                    self.cells[i][j].image = pygame.transform.scale(pygame.image.load("road2.jpg"), (40, 40))
+                    self.cells[i][j].image = pygame.transform.scale(pygame.image.load("sprites/road2.jpg"), (40, 40))
                     self.cells[i][j].draw(screen, (95, 71, 71), 0)
                 if(self.cells[i][j].wall == 3):
-                    self.cells[i][j].image = pygame.transform.scale(pygame.image.load("road3.jpg"), (40, 40))
+                    self.cells[i][j].image = pygame.transform.scale(pygame.image.load("sprites/road3.jpg"), (40, 40))
                     self.cells[i][j].draw(screen, (95, 71, 71), 0)
                 if(self.cells[i][j].wall == 9):
-                    self.cells[i][j].image = pygame.transform.scale(pygame.image.load("oil.jpg"), (40, 40))
+                    self.cells[i][j].image = pygame.transform.scale(pygame.image.load("sprites/oil.jpg"), (40, 40))
                     self.cells[i][j].draw(screen, (0, 0, 255), 0)
                 if(self.cells[i][j].wall == 8):
-                    self.cells[i][j].image = pygame.transform.scale(pygame.image.load("puddle.jpg"), (40, 40))
+                    self.cells[i][j].image = pygame.transform.scale(pygame.image.load("sprites/puddle.jpg"), (40, 40))
                     self.cells[i][j].draw(screen, (0, 255, 0), 0)
 
     def getCellSize(self):
@@ -71,7 +71,7 @@ class Grid:
 class Agent(pygame.sprite.Sprite):
     def __init__(self, size):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load("agent2.png")
+        self.image = pygame.image.load("sprites/agent2.png")
         self.image = pygame.transform.scale(self.image, (size, size))
         self.rect = self.image.get_rect()
         self.rect.center = (100, 100)
@@ -103,7 +103,6 @@ class Agent(pygame.sprite.Sprite):
 
     def goTo(self, endy, endx):
         if(int(map[int(self.rect.y / self.size)][int(self.rect.x / self.size)]) > 0):
-            print('asdasdadsada')
             agentPositionx = self.rect.x / self.size
             agentPositiony = self.rect.y / self.size
             print(agentPositionx, agentPositiony)
