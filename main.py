@@ -12,6 +12,7 @@ road2 = pygame.image.load("sprites/road2.jpg")
 road3 = pygame.image.load("sprites/road3.jpg")
 oil = pygame.image.load("sprites/oil.jpg")
 puddle = pygame.image.load("sprites/puddle.jpg")
+trashcan = pygame.image.load("sprites/trashcan.png")
 
 def loadMap(filepath):
     array = []
@@ -19,7 +20,6 @@ def loadMap(filepath):
         content = f.read().splitlines()
         for line in content:
             array.append(line)
-    # print(array)
     return array
 
 
@@ -81,7 +81,7 @@ class Grid:
 class TrashCan(pygame.sprite.Sprite):
     def __init__(self,size,x,y):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load("sprites/trashcan.png")
+        self.image = trashcan
         self.image = pygame.transform.scale(self.image, (size, size))
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
@@ -127,13 +127,12 @@ class Agent(pygame.sprite.Sprite):
         return [self.rect.y / self.size,self.rect.x / self.size]
 
     def goTo(self, endy, endx):
-        print(endy,endx)
         if(int(map[int(endy)][int(endx)])>0):
             agentPositionx = self.rect.x / self.size
             agentPositiony = self.rect.y / self.size
             self.actions, distance = astar.search(
                 agentPositionx, agentPositiony, endx, endy, self.directions, map)
-            print(distance, self.actions)
+            print("distance: ", distance)
         else:
             self.actions = []
 
@@ -152,7 +151,6 @@ class Agent(pygame.sprite.Sprite):
                 self.goTo(nextpoint[1],nextpoint[0])
 
     def calculatePath(self):
-        print(tsp.find(agent.getPosition(), map, objectmap))
         self.path= tsp.find(agent.getPosition(), map, objectmap)
 
 
