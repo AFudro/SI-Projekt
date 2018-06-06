@@ -24,5 +24,5 @@ paper(X) <= (trash[X]==1) & (white[X]>0.5) & (containsInk[X]>0.3)
 glassContainer(X) <= glass(X)
 plasticContainer(X) <= plastic(X)
 paperContainer(X) <= paper(X)
-print(paperContainer(X))
+print(trash['unknownObject2'])
 

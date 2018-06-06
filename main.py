@@ -2,6 +2,7 @@ import pygame
 import sys
 import astar
 import tsp
+import decisiontree
 
 
 grass = pygame.image.load("sprites/grass.jpg")
@@ -13,6 +14,15 @@ road3 = pygame.image.load("sprites/road3.jpg")
 oil = pygame.image.load("sprites/oil.jpg")
 puddle = pygame.image.load("sprites/puddle.jpg")
 trashcan = pygame.image.load("sprites/trashcan.png")
+
+
+trashes = [[0 for x in range(20)] for y in range(15)]
+trashes[14][0]=[[0.7,0,0.4,0.8,0,1,0.1,0,0,0.2],[0.2,0,0.1,0.1,0,1,0.1,0,0,0.2]]
+trashes[11][7] = [[1,1,1,1,1,1,1,1,1,1]]
+trashes[1][16] = [[0,0,0,0,0,0,0,0,0,0]]
+trashes[6][13] = [[0.2,0.9,0.1,0.1,0,1,0.1,0,0.1,0.2]]
+trashes[14][19] = [[0.2,0.0,0.1,0.1,0,1,0.1,0,0.1,0.9]]
+
 
 def loadMap(filepath):
     array = []
@@ -132,7 +142,7 @@ class Agent(pygame.sprite.Sprite):
             agentPositiony = self.rect.y / self.size
             self.actions, distance = astar.search(
                 agentPositionx, agentPositiony, endx, endy, self.directions, map)
-            print("distance: ", distance)
+            #print("distance: ", distance)
         else:
             self.actions = []
 
@@ -148,6 +158,11 @@ class Agent(pygame.sprite.Sprite):
         else:
             if(self.path):
                 nextpoint= self.path.pop(0)
+                #print(nextpoint,'aaa',objectmap[int(nextpoint[1])][int(nextpoint[0])])
+                if(objectmap[int(nextpoint[1])][int(nextpoint[0])]==str(1)):
+                    #print(trashes[int(nextpoint[1])][int(nextpoint[0])])
+                    result = decisiontree.predictTypeOfTrash(trashes[int(nextpoint[1])][int(nextpoint[0])])
+                    print("Trashes on (" + str(nextpoint[1]) + "," + str(nextpoint[0]) + '):', result)
                 self.goTo(nextpoint[1],nextpoint[0])
 
     def calculatePath(self):
