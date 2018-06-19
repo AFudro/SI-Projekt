@@ -106,13 +106,13 @@ def find(agentPosition, map, objectmap):
         del population[populationSize:]
 
     for p in population:
-        print(p, fitness(p,edges))
+        fitness(p,edges)
 
     best= population[0]
     path=[]
     for v in best:
         path.append([vertices[v].x, vertices[v].y])
-    print(path)
+    #print(path)
 
 
     return path

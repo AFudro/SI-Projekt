@@ -161,7 +161,7 @@ class Agent(pygame.sprite.Sprite):
                 #print(nextpoint,'aaa',objectmap[int(nextpoint[1])][int(nextpoint[0])])
                 if(objectmap[int(nextpoint[1])][int(nextpoint[0])]==str(1)):
                     #print(trashes[int(nextpoint[1])][int(nextpoint[0])])
-                    result = decisiontree.predictTypeOfTrash(trashes[int(nextpoint[1])][int(nextpoint[0])])
+                    result = decisiontree.predictTypeOfTrash(cfl,trashes[int(nextpoint[1])][int(nextpoint[0])])
                     print("Trashes on (" + str(nextpoint[1]) + "," + str(nextpoint[0]) + '):', result)
                 self.goTo(nextpoint[1],nextpoint[0])
 
@@ -169,7 +169,7 @@ class Agent(pygame.sprite.Sprite):
         self.path= tsp.find(agent.getPosition(), map, objectmap)
 
 
-
+cfl = decisiontree.generateTree()
 pygame.init()
 screen = pygame.display.set_mode((1200, 900))
 
@@ -211,6 +211,7 @@ while True:
                         break
         if event.type == pygame.KEYDOWN:
             if event.key==pygame.K_SPACE:
+                        print("result:")
                         agent.calculatePath()
                         break
     pygame.display.update()
